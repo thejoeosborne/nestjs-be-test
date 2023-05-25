@@ -69,7 +69,7 @@ Create a controller-level interceptor that will log AT LEAST the following logs 
 ```log
 # Examples
 [UserInterceptor] (MjAyMy0wNS0yNVQyMjoxMjozMy45NzJa) GET /users
-POST /users {"firstName":"michael"}
+[UserInterceptor] (MjAyMy0wNS0yNVQyMzozOTo1Ni41NDZa) POST /users {"firstName":"michael"}
 ```
 
 **Response Log**
@@ -80,7 +80,8 @@ POST /users {"firstName":"michael"}
 
 ```log
 # Examples
-[UserInterceptor] (MjAyMy0wNS0yNVQyMjoxMjozMy45NzJa) 400 {""}
+[UserInterceptor] (MjAyMy0wNS0yNVQyMjoxMjozMy45NzJa) 200 []
+[UserInterceptor] (MjAyMy0wNS0yNVQyMzozOTo1Ni41NDZa) 400 {}
 ```
 
 ### Validation
