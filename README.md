@@ -19,20 +19,19 @@ This project will consist of importing a CSV file of users into mongo, creating 
 - [Installation](#installation)
 - [Running the app](#running-the-app)
 
-
-
 ### Users Schema
 
 Create a new users schema using [nestjs/mongoose package](https://docs.nestjs.com/techniques/mongodb).
 
 The user schema should contain AT LEAST the following properties:
-- **_id** (mongo object id)
-- **firstName**
-- **lastName**
-- **email**
-- **phone**
+
+- **\_id** (mongo object id)
+- **firstName** _required_
+- **lastName** _required_
+- **email** _required_
+- **phone** _required_
 - **marketingSource** ("provider" column from users.csv)
-- **birthDate**
+- **birthDate** _required_
 - **status**
 - **createdAt**
 - **updatedAt**
@@ -44,10 +43,11 @@ To prevent duplicates, you will also want to ensure "unique"-ness where it makes
 ### REST API
 
 Please create a basic CRUD api with AT LEAST the following endpoints:
-- POST /users (*create a new user*)
-- GET /users (*fetch existing users*)
-- PATCH /users/:_id (*update a single user*)
-- DELETE /users/:_id (*delete a single user*)
+
+- POST /users (_create a new user_)
+- GET /users (_fetch existing users_)
+- PATCH /users/:\_id (_update a single user_)
+- DELETE /users/:\_id (_delete a single user_)
 
 ### Interceptor Logger
 
@@ -60,6 +60,7 @@ That is why we should set that up now.
 Create a controller-level interceptor that will log AT LEAST the following logs in a single log statement (single-line):
 
 **Request Log**
+
 - Request ID
 - HTTP Method
 - URL Path
@@ -72,6 +73,7 @@ POST /users {"firstName":"michael"}
 ```
 
 **Response Log**
+
 - Request ID
 - Response Status Code
 - Response JSON (stringified)
@@ -124,7 +126,6 @@ GET /users?firstName=michael&sort=1&sortBy=lastName&limit=20&page=1
 This will return the first 20 users with first name "michael", sorted by last name alphabetically.
 
 See interface here
-
 
 ## Installation
 
