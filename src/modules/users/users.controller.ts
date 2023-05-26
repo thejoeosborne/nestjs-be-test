@@ -7,19 +7,27 @@ import {
   Patch,
   Post,
   Query,
+  UnprocessableEntityException,
+  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
+  ApiBody,
+  ApiConsumes,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { Types } from 'mongoose';
+import { diskStorage } from 'multer';
 import { ParseMongoObjectIdPipe } from 'src/pipes/parse-mongo-object-id.pipe';
+import { CsvParser } from 'src/providers/csv-parser.provider';
 import { CreateUserDto } from './dto/create-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UploadUsersResponseDto } from './dto/upload-users-response.dto';
 import { UsersInterceptor } from './interceptors/users.interceptor';
 import { User } from './schema/user.schema';
 import { UsersService } from './users.service';
@@ -63,5 +71,57 @@ export class UsersController {
     @Param('id', ParseMongoObjectIdPipe) id: Types.ObjectId,
   ): Promise<User> {
     return;
+  }
+
+  @Post('/upload')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      // Allow only CSV mimetypes
+      fileFilter: (req, file, callback) => {
+        if (!file.mimetype?.match(/text\/csv/i)) {
+          return callback(null, false);
+        }
+        callback(null, true);
+      },
+      storage: diskStorage({
+        filename: function (req, file, cb) {
+          cb(null, file.originalname);
+        },
+      }),
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  async uploadUsers(
+    @UploadedFile()
+    file: Express.Multer.File,
+  ): Promise<UploadUsersResponseDto> {
+    if (!file) {
+      throw new UnprocessableEntityException(
+        'Uploaded file is not a CSV file.',
+      );
+    }
+
+    const users = await CsvParser.parse(file.path);
+
+    /**
+     * @todo
+     * Insert users into database
+     */
+
+    return new UploadUsersResponseDto({
+      failedCount: 0,
+      successCount: 0,
+    });
   }
 }

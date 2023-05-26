@@ -55,6 +55,7 @@ This will start a local server at http://localhost:9000/swagger
   - [Validation](#validation)
   - [Data Import](#data-import)
   - [Filtering, Sorting \& Pagination](#filtering-sorting--pagination)
+- [Tests (Bonus)](#tests-bonus)
 
 ### Users Schema
 
@@ -162,11 +163,17 @@ Import all rows from users.csv file into our new users collection.
 
 Create a new data seeding endpoint that will upload a CSV file and insert the new users.
 
+```log
 POST /users/upload
+```
 
-**Extra Credit**
+Should return success and failed count.
 
-Extra points will be given for implementing a bulk insert.
+See [src/modules/users/dto/upload-users-response.dto.ts](src/modules/users/dto/upload-users-response.dto.ts)
+
+**Bonus**
+
+Extra points will be given for implementing a "bulk" insert, that inserts many at a time. Not just one user at a time.
 
 ### Filtering, Sorting & Pagination
 
@@ -221,3 +228,13 @@ export class UsersController {
 **_Note_: All api endpoints should NOT return soft deleted users.\***
 
 See [Query User DTO (data transfer object) here](src/modules/users/dto/query-user.dto.ts)
+
+## Tests (Bonus)
+
+We have a separate automation test, so this section will be bonus.
+
+Please create integration tests for your api.
+
+You can use any testing framework of your choice.
+
+Please include how to run your tests in this section of readme.
