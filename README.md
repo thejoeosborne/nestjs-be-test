@@ -35,6 +35,7 @@ The user schema should contain AT LEAST the following properties:
 - **status**
 - **createdAt**
 - **updatedAt**
+- **isDeleted**
 
 To ensure performance, please add appropriate indexes where it makes sense.
 
@@ -47,7 +48,9 @@ Please create a basic CRUD api with AT LEAST the following endpoints:
 - POST /users (_create a new user_)
 - GET /users (_fetch existing users_)
 - PATCH /users/:\_id (_update a single user_)
-- DELETE /users/:\_id (_delete a single user_)
+- DELETE /users/:\_id (_soft delete a single user - do NOT actually delete user from mongo_)
+
+**_Note_: All api endpoints should NOT return soft deleted users.\***
 
 ### Interceptor Logger
 
@@ -125,6 +128,8 @@ GET /users?firstName=michael&sort=1&sortBy=lastName&limit=20&page=1
 ```
 
 This will return the first 20 users with first name "michael", sorted by last name alphabetically.
+
+**_Note_: All api endpoints should NOT return soft deleted users.\***
 
 See interface here
 
