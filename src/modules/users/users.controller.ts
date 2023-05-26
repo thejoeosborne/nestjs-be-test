@@ -1,10 +1,19 @@
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UsersInterceptor } from './interceptors/users.interceptor';
 import { User } from './schema/user.schema';
 import { UsersService } from './users.service';
 
 @ApiTags('Users API')
 @Controller('users')
+@UseInterceptors(UsersInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

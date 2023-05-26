@@ -4,6 +4,10 @@ This take-home project will test your back-end coding abilities. We will be evau
 
 This project will consist of importing a CSV file of users into mongo, creating a REST API with basic CRUD functionality and searching, validation, documenting endpoints using swagger, and aggregating user statistics.
 
+Frameworks Used
+
+- [NestJS](https://docs.nestjs.com/)
+
 ## Requirements
 
 **Todos**
@@ -71,8 +75,7 @@ Create a controller-level interceptor that will log AT LEAST the following logs 
 
 ```log
 # Examples
-[UserInterceptor] (MjAyMy0wNS0yNVQyMjoxMjozMy45NzJa) GET /users
-[UserInterceptor] (MjAyMy0wNS0yNVQyMzozOTo1Ni41NDZa) POST /users {"firstName":"michael"}
+[Nest] 64047  - 05/26/2023, 11:25:01 AM     LOG [UsersInterceptor] (MjAyMy0wNS0yNlQxODoyNTowMS45MTZa) GET /users {}
 ```
 
 **Response Log**
@@ -83,9 +86,13 @@ Create a controller-level interceptor that will log AT LEAST the following logs 
 
 ```log
 # Examples
-[UserInterceptor] (MjAyMy0wNS0yNVQyMjoxMjozMy45NzJa) 200 []
-[UserInterceptor] (MjAyMy0wNS0yNVQyMzozOTo1Ni41NDZa) 400 {}
+[Nest] 64047  - 05/26/2023, 11:25:01 AM     LOG [UsersInterceptor] (MjAyMy0wNS0yNlQxODoyNTowMS45MTZa) []
 ```
+
+**Recommended Reading**
+
+- [NestJS Request Life Cycle](https://docs.nestjs.com/faq/request-lifecycle#summary)
+- https://docs.nestjs.com/interceptors
 
 ### Validation
 
@@ -98,6 +105,10 @@ We also don't want phone numbers with alphabetical letters or emails that are no
 This should be blocked not only at the REST API level, but also at the database level (hint: mongoose schema validation).
 
 To do this, we use class validator decorators in NestJS.
+
+**Recommended Reading**
+
+- https://docs.nestjs.com/techniques/validation
 
 ### Data Import
 
