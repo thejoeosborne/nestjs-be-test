@@ -8,11 +8,46 @@ Frameworks Used
 
 - [NestJS](https://docs.nestjs.com/)
 
+This project was set up using Node version **v14.19.0**
+
+I recommend installing [NVM (Node Version Manager)](https://github.com/nvm-sh/nvm#installing-and-updating) to manage different NodeJS versions locally.
+
+## Installation / Set Up
+
+### Install Mongo
+
+Download and install the community edition of MongoDB from https://www.mongodb.com/docs/manual/installation/.
+
+After installing, you'll want to start the service.
+
+Next, download and install [Studio 3T](https://robomongo.org). This is a GUI for connecting to your Mongo database, and will allow you to query your database for easier debugging and troubleshooting.
+
+Open up Studio 3T and connect to localhost:27017.
+
+Once connected, go ahead and create a new database named "soldcom".
+
+![Studio 3T Screenshot](./img/studio-3t.png)
+
+```bash
+$ npm install
+```
+
+## Running the app
+
+```bash
+nest start -w
+```
+
+This will start a local server at http://localhost:9000/swagger
+
 ## Requirements
 
 **Todos**
 
 - [Intro](#intro)
+- [Installation / Set Up](#installation--set-up)
+  - [Install Mongo](#install-mongo)
+- [Running the app](#running-the-app)
 - [Requirements](#requirements)
   - [Users Schema](#users-schema)
   - [REST API](#rest-api)
@@ -20,8 +55,6 @@ Frameworks Used
   - [Validation](#validation)
   - [Data Import](#data-import)
   - [Filtering, Sorting \& Pagination](#filtering-sorting--pagination)
-- [Installation](#installation)
-- [Running the app](#running-the-app)
 
 ### Users Schema
 
@@ -149,25 +182,42 @@ GET /users?firstName=michael&sort=1&sortBy=lastName&limit=20&page=1
 
 This will return the first 20 users with first name "michael", sorted by last name alphabetically.
 
+Update the **GET /users** endpoint to return a paginated users response.
+
+Default query values should be:
+
+- page = 1
+- sort = 1
+- sortBy = 'createdAt'
+
+Start by updating the api response type and return types
+
+```typescript
+export class UsersController {
+  // ... code
+
+  @Get('/')
+  @ApiOperation({ summary: `Return a list of users` })
+  @ApiOkResponsePaginated(User)
+  async getUsers(
+    @Query() query: QueryUserDto,
+  ): Promise<PaginatedResponseDto<User>> {
+    /**
+     * @todo
+     * Add filter, sorting, pagination logic here
+     */
+
+    return new PaginatedResponseDto({
+      data: [],
+      limit: query.limit,
+      page: query.page,
+      sort: query.sort,
+      sortBy: query.sortBy,
+    });
+  }
+}
+```
+
 **_Note_: All api endpoints should NOT return soft deleted users.\***
 
-See interface here
-
-## Installation
-
-```bash
-$ npm install
-```
-
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
+See [Query User DTO (data transfer object) here](src/modules/users/dto/query-user.dto.ts)
