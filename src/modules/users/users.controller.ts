@@ -1,11 +1,12 @@
 import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './schema/user.schema';
+import { UsersService } from './users.service';
 
 @ApiTags('Users API')
 @Controller('users')
 export class UsersController {
-  constructor() {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post('/')
   @ApiOperation({ summary: `Create a new user` })
@@ -18,7 +19,7 @@ export class UsersController {
   @ApiOperation({ summary: `Return a list of users` })
   @ApiOkResponse({ type: [User] })
   async getUsers(): Promise<User[]> {
-    return;
+    return await this.usersService.getModel().find();
   }
 
   @Patch('/:id')

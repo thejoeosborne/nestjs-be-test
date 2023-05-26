@@ -4,7 +4,10 @@ import { Document, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
+export const USERS_COLLECTION = 'users';
+
 @Schema({
+  collection: USERS_COLLECTION,
   timestamps: true,
 })
 export class User {
