@@ -32,6 +32,12 @@ Once connected, go ahead and create a new database named "soldcom".
 $ npm install
 ```
 
+### Configuration / Environment Variables
+
+Before starting the app, you'll need to create a new **.env** file in the root folder.
+
+See [.env.example](.env.example)
+
 ## Running the app
 
 ```bash
@@ -42,11 +48,14 @@ This will start a local server at http://localhost:9000/swagger
 
 ## Requirements
 
+The **UsersModule** has already been set up for you and includes a bunch of helper classes.
+
 **Todos**
 
 - [Intro](#intro)
 - [Installation / Set Up](#installation--set-up)
   - [Install Mongo](#install-mongo)
+  - [Configuration / Environment Variables](#configuration--environment-variables)
 - [Running the app](#running-the-app)
 - [Requirements](#requirements)
   - [Users Schema](#users-schema)
@@ -56,6 +65,16 @@ This will start a local server at http://localhost:9000/swagger
   - [Data Import](#data-import)
   - [Filtering, Sorting \& Pagination](#filtering-sorting--pagination)
 - [Tests (Bonus)](#tests-bonus)
+
+After reviewing the todos, I suggest reviewing at least the following basics of NestJS.
+
+It will definitely help with this project.
+
+There are also plenty of tutorials and youtube videos online.
+
+Other than that, happy coding!!!
+
+![nestjs-suggested-docs](img/nestjs-docs.png)
 
 ### Users Schema
 
