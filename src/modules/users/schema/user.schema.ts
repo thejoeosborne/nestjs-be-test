@@ -58,7 +58,7 @@ export class User {
   marketingSource: string;
 
   @ApiProperty({ required: false })
-  @Prop({ required: true })
+  @Prop({ required: true, index: true })
   phone: string;
 
   @ApiProperty({
@@ -72,6 +72,10 @@ export class User {
   @ApiResponseProperty()
   @Prop({ type: Date })
   updatedAt: Date;
+
+  constructor(args?: Partial<User>) {
+    Object.assign(this, args);
+  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

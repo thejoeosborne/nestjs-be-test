@@ -36,6 +36,12 @@ $ npm install
 
 Before starting the app, you'll need to create a new **.env** file in the root folder.
 
+```dotenv
+API_DOCS_PATH=swagger
+MONGO_DB_URL=mongodb://localhost/soldcom
+PORT=9000
+```
+
 See [.env.example](.env.example)
 
 ## Running the app
@@ -64,7 +70,9 @@ The **UsersModule** has already been set up for you and includes a bunch of help
   - [Validation](#validation)
   - [Data Import](#data-import)
   - [Filtering, Sorting \& Pagination](#filtering-sorting--pagination)
-- [Tests (Bonus)](#tests-bonus)
+- [Cypress Tests](#cypress-tests)
+- [Project Submission](#project-submission)
+- [Questions](#questions)
 
 After reviewing the todos, I suggest reviewing at least the following basics of NestJS.
 
@@ -75,6 +83,8 @@ There are also plenty of tutorials and youtube videos online.
 Other than that, happy coding!!!
 
 ![nestjs-suggested-docs](img/nestjs-docs.png)
+
+https://docs.nestjs.com/first-steps
 
 ### Users Schema
 
@@ -115,7 +125,7 @@ Please create a basic CRUD api with AT LEAST the following endpoints:
 
 ### Interceptor Logger
 
-There is a saying, "We live and die by our logs".
+There is a saying, **_"We live and die by our logs"_**.
 
 Without good logs, it becomes very difficult to troubleshoot any future issues or problems.
 
@@ -146,6 +156,8 @@ Create a controller-level interceptor that will log AT LEAST the following logs 
 [Nest] 64047  - 05/26/2023, 11:25:01 AM     LOG [UsersInterceptor] (MjAyMy0wNS0yNlQxODoyNTowMS45MTZa) []
 ```
 
+**_Note\*: This has already been started for you_**
+
 **Recommended Reading**
 
 - [NestJS Request Life Cycle](https://docs.nestjs.com/faq/request-lifecycle#summary)
@@ -174,11 +186,7 @@ Lastly, ensure any required or optional fields are also reflected in the swagger
 
 ### Data Import
 
-If you've gotten this far, it is now time to put your new api to the test.
-
-Import all rows from users.csv file into our new users collection.
-
-(This file will be sent as a separate attachment)
+Download and import all rows from [users.csv](https://sc-interviews.s3.amazonaws.com/users.csv.zip) file into our new users collection.
 
 Create a new data seeding endpoint that will upload a CSV file and insert the new users.
 
@@ -216,7 +224,7 @@ Default query values should be:
 - sort = 1
 - sortBy = 'createdAt'
 
-Start by updating the api response type and return types
+Start by updating the api response type and return types of your `getUsers()` controller method:
 
 ```typescript
 export class UsersController {
@@ -248,12 +256,94 @@ export class UsersController {
 
 See [Query User DTO (data transfer object) here](src/modules/users/dto/query-user.dto.ts)
 
-## Tests (Bonus)
+## Cypress Tests
 
-We have a separate automation test, so this section will be bonus.
+Here we use [Cypress Framework](https://www.cypress.io/) for running full end-to-end tests.
 
-Please create integration tests for your api.
+Please set up and install Cypress according to their docs.
 
-You can use any testing framework of your choice.
+Create 2 new specs (test files).
 
-Please include how to run your tests in this section of readme.
+One will be an integration spec, and the other will be a full end-to-end spec testing the swagger docs UI.
+
+For your integration spec, you should test all your endpoints.
+
+I would also recommend testing different combinations of your filtering, sorting, and pagination.
+
+**Integration Tests Example**
+
+```typescript
+describe(`Users API Integration Tests`, () => {
+  it(`GET /users`, () => {
+    cy.request({ url: 'http://localhost:9000/users', method: 'get' }).then(
+      (res) => {
+        expect(res.status).eq(200);
+        expect(res.body.data.length).to.be.greaterThan(0);
+      },
+    );
+  });
+
+  it(`GET /users?firstName=John&limit=20&page=1&sort=-1&sortBy=createdAt`, () => {
+    cy.request({
+      url: 'http://localhost:9000/users?firstName=John&limit=20&page=1&sort=-1&sortBy=createdAt',
+      method: 'get',
+    }).then((res) => {
+      expect(res.status).eq(200);
+      expect(res.body.page).to.eq(1);
+      expect(res.body.limit).to.eq(20);
+      expect(res.body.sort).to.eq(-1);
+      expect(res.body.sortBy).to.eq('createdAt');
+      expect(res.body.data.length).to.be.greaterThan(0);
+      expect(res.body.data.every((user) => user.firstName.match(/john/i)));
+    });
+  });
+});
+```
+
+**E2E Tests Example**
+
+For this spec, you will actually want to visit your swagger docs (http://localhost:9000/swagger#/) and click the buttons on the swagger docs UI, to execute queries and run your assertions.
+
+```typescript
+describe(`Users API E2E Test`, () => {
+  it(`GET /users?firstName=John&limit=20&page=1&sort=-1&sortBy=createdAt)`, () => {
+    cy.visit(
+      `http://localhost:9000/swagger#/Users%20API/UsersController_getUsers`,
+    );
+
+    cy.get(
+      '#operations-Users_API-UsersController_getUsers .try-out__btn',
+    ).click();
+
+    cy.get(
+      '#operations-Users_API-UsersController_getUsers .body-param__text',
+    ).type(
+      JSON.stringify({
+        birthDate: '2023-05-26T20:46:21.392Z',
+        email: 'johnsmith@nestjs.com',
+        firstName: 'John',
+        lastName: 'Smith',
+        marketingSource: 'string',
+        phone: 'string',
+        status: 'DQL',
+      }),
+    );
+
+    cy.get('.execute').click();
+  });
+});
+```
+
+For this E2E test, it will be simplified.
+
+You will only need to test the **GET /users** endpoint and it's UI interface.
+
+## Project Submission
+
+When you are done with this project, please submit a github url with the updated repo to the person who administered this test to you.
+
+If private repo, please grant gitub access to the test administrator's email.
+
+## Questions
+
+If you have any questions, please feel free to reach out to the person who administered this test to you.

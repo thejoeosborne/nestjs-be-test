@@ -8,4 +8,9 @@ export class CreateUserDto extends User {
   })
   @IsDateString()
   birthDate: Date;
+
+  constructor(args?: Partial<CreateUserDto>) {
+    super();
+    Object.assign(this, args);
+  }
 }
