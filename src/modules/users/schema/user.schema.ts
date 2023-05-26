@@ -17,7 +17,7 @@ export class User {
   @ApiProperty({
     description: `User's birthdate`,
     example: new Date().toISOString(),
-    required: true,
+    required: false,
   })
   @Prop({ type: Date })
   birthDate: Date;
@@ -29,7 +29,7 @@ export class User {
   @ApiProperty({
     description: `User's email address`,
     example: 'johnsmith@nestjs.com',
-    required: true,
+    required: false,
   })
   @Prop()
   email: string;
@@ -37,7 +37,7 @@ export class User {
   @ApiProperty({
     description: `User's first name`,
     example: 'John',
-    required: true,
+    required: false,
   })
   @Prop()
   firstName: string;
@@ -48,7 +48,7 @@ export class User {
   @ApiProperty({
     description: `User's last name`,
     example: 'Smith',
-    required: true,
+    required: false,
   })
   @Prop()
   lastName: string;
@@ -57,7 +57,7 @@ export class User {
   @Prop()
   marketingSource: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
   @Prop({ required: true })
   phone: string;
 

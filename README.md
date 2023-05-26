@@ -50,9 +50,13 @@ To prevent duplicates, you will also want to ensure "unique"-ness where it makes
 Please create a basic CRUD api with AT LEAST the following endpoints:
 
 - POST /users (_create a new user_)
+  - Should return new user
 - GET /users (_fetch existing users_)
+  - Should return an array of users
 - PATCH /users/:\_id (_update a single user_)
+  - Should return updated user
 - DELETE /users/:\_id (_soft delete a single user - do NOT actually delete user from mongo_)
+  - Should return soft deleted user
 
 **_Note_: All api endpoints should NOT return soft deleted users.\***
 
@@ -104,11 +108,16 @@ We also don't want phone numbers with alphabetical letters or emails that are no
 
 This should be blocked not only at the REST API level, but also at the database level (hint: mongoose schema validation).
 
-To do this, we use class validator decorators in NestJS.
+To do this, we use class validator decorators in NestJS (see recommended reading below).
+
+Lastly, ensure any required or optional fields are also reflected in the swagger api docs.
+
+![Swagger Required Fields](img/swagger-required-fields.png)
 
 **Recommended Reading**
 
 - https://docs.nestjs.com/techniques/validation
+- [Swagger Intro](https://docs.nestjs.com/openapi/introduction)
 
 ### Data Import
 
