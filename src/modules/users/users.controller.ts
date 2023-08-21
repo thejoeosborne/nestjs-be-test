@@ -39,6 +39,8 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // handled all logic in service layer rather than controller layer
+
   @Post('/')
   @ApiOperation({ summary: `Create a new user` })
   @ApiOkResponse({ type: User })
