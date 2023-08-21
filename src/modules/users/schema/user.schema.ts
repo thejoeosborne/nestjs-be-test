@@ -17,56 +17,109 @@ export class User {
   @ApiProperty({
     description: `User's birthdate`,
     example: new Date().toISOString(),
-    required: false,
+    required: true,
+    type: Date,
   })
-  @Prop({ type: Date })
+  @Prop({
+    type: Date,
+    required: [true, 'Birthdate is required'],
+  })
   birthDate: Date;
 
   @ApiResponseProperty()
-  @Prop({ type: Date })
+  @Prop({
+    type: Date,
+    required: true,
+    default: Date.now,
+  })
   createdAt: Date;
 
   @ApiProperty({
     description: `User's email address`,
     example: 'johnsmith@nestjs.com',
     required: false,
+    type: String,
   })
-  @Prop()
+  @Prop({
+    required: [true, 'Email address is required'],
+    index: true,
+    type: String,
+    validate: {
+      validator: (v: string) => {
+        return /\S+@\S+\.\S+/.test(v);
+      },
+      message: (props) => `${props.value} is not a valid email address.`,
+    },
+  })
   email: string;
 
   @ApiProperty({
     description: `User's first name`,
     example: 'John',
-    required: false,
+    required: true,
+    type: String,
   })
-  @Prop()
+  @Prop({ required: [true, 'First name is required'], type: String })
   firstName: string;
 
+  @ApiResponseProperty()
   @Prop({ type: Boolean, default: null })
   isDeleted: boolean;
 
   @ApiProperty({
     description: `User's last name`,
     example: 'Smith',
-    required: false,
+    required: true,
+    type: String,
   })
-  @Prop()
+  @Prop({ required: [true, 'Last name is required'], type: String })
   lastName: string;
 
-  @ApiProperty({ required: false })
-  @Prop()
+  @ApiProperty({
+    description: 'Marketing source of the user',
+    example: 'Google Ads',
+    required: false,
+    type: String,
+  })
+  @Prop({ required: false, type: String })
   marketingSource: string;
 
-  @ApiProperty({ required: false })
-  @Prop({ required: true, index: true })
+  @ApiProperty({
+    description: 'Users phone number',
+    example: '555-555-5555',
+    required: true,
+    type: String,
+  })
+  @Prop({
+    required: [true, 'Phone number is required'],
+    index: true,
+    validate: {
+      validator: (v: string) => {
+        //could write more complex regex to handle other formats but this works for now
+        return /[\d\-\(\)\s]+/.test(v);
+      },
+      message: (props) => `${props.value} is not a valid phone number.`,
+    },
+    type: String,
+  })
   phone: string;
+
+  //added an age prop to the UserSchema
+  @ApiProperty({
+    description: `User's age`,
+    example: 21,
+    required: false,
+    type: Number,
+  })
+  @Prop({ required: false, type: Number, validate: Number.isInteger })
+  age: number;
 
   @ApiProperty({
     description: `User's status`,
     example: 'DQL',
     required: false,
   })
-  @Prop()
+  @Prop({ required: false, type: String })
   status: string;
 
   @ApiResponseProperty()

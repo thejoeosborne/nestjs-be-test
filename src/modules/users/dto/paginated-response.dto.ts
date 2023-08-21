@@ -19,6 +19,9 @@ export class PaginatedResponseDto<T> implements IPaginatedResponse<T> {
   @ApiResponseProperty()
   sortBy: string;
 
+  @ApiResponseProperty()
+  filters: Record<string, any>;
+
   constructor(args?: PaginatedResponseDto<T>) {
     Object.assign(this, args);
   }

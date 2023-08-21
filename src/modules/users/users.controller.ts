@@ -25,6 +25,7 @@ import { diskStorage } from 'multer';
 import { ParseMongoObjectIdPipe } from 'src/pipes/parse-mongo-object-id.pipe';
 import { CsvParser } from 'src/providers/csv-parser.provider';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PaginatedResponseDto } from './dto/paginated-response.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UploadUsersResponseDto } from './dto/upload-users-response.dto';
@@ -42,14 +43,16 @@ export class UsersController {
   @ApiOperation({ summary: `Create a new user` })
   @ApiOkResponse({ type: User })
   async postUsers(@Body() body: CreateUserDto): Promise<User> {
-    return;
+    return await this.usersService.createUser(body);
   }
 
   @Get('/')
   @ApiOperation({ summary: `Return a list of users` })
-  @ApiOkResponse({ type: [User] })
-  async getUsers(@Query() query: QueryUserDto): Promise<User[]> {
-    return await this.usersService.getModel().find();
+  @ApiOkResponse({ type: [PaginatedResponseDto] })
+  async getUsers(
+    @Query() query: QueryUserDto,
+  ): Promise<PaginatedResponseDto<User>> {
+    return await this.usersService.getAllUsers(query);
   }
 
   @Patch('/:id')
@@ -60,7 +63,7 @@ export class UsersController {
     @Param('id', ParseMongoObjectIdPipe) id: Types.ObjectId,
     @Body() body: UpdateUserDto,
   ): Promise<User> {
-    return;
+    return await this.usersService.updateUser(id, body);
   }
 
   @Delete('/:id')
@@ -70,7 +73,7 @@ export class UsersController {
   async deleteUser(
     @Param('id', ParseMongoObjectIdPipe) id: Types.ObjectId,
   ): Promise<User> {
-    return;
+    return await this.usersService.softDeleteUser(id);
   }
 
   @Post('/upload')
@@ -113,15 +116,19 @@ export class UsersController {
     }
 
     const users = await CsvParser.parse(file.path);
-
-    /**
-     * @todo
-     * Insert users into database
-     */
+    const startingCount = users?.length;
+    if (!startingCount) {
+      throw new UnprocessableEntityException(
+        'Uploaded file does not contain any users.',
+      );
+    }
+    const returnedUsers = await this.usersService.bulkInsertUsersFromCSV(users);
+    const successCount = returnedUsers?.length;
+    const failedCount = startingCount - successCount;
 
     return new UploadUsersResponseDto({
-      failedCount: 0,
-      successCount: 0,
+      failedCount: failedCount,
+      successCount: successCount,
     });
   }
 }
