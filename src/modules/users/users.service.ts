@@ -122,7 +122,7 @@ export class UsersService {
     return updatedUser;
   }
 
-  //.insertMany() for a bulk insert
+  //.insertMany() for a bulk insert. Set ordered to false to continue inserting documents even if one fails.
   async bulkInsertUsersFromCSV(users: User[]): Promise<User[]> {
     const userModel = this.getModel();
     return await userModel.insertMany(users, { ordered: false });
