@@ -56,7 +56,6 @@ export class UsersService {
   }
 
   async getAllUsers(query: QueryUserDto): Promise<PaginatedResponseDto<User>> {
-    console.log('query', query);
     const userModel = this.getModel();
 
     // very hacky way to allow for filtering by certain fields, but it works for now!
